@@ -4,12 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.ozgeucar.citweety.data.local.FavoritePlaceDao
 import com.ozgeucar.citweety.data.PlaceDao
 import com.ozgeucar.citweety.data.PlaceEntity
 import com.ozgeucar.citweety.domain.model.FavoritePlace
 
-@Database(entities = [PlaceEntity::class, FavoritePlace::class], version = 3, exportSchema = false)
+@Database(
+    entities = [PlaceEntity::class, FavoritePlace::class],
+    version = 3,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun placeDao(): PlaceDao
     abstract fun favoritePlaceDao(): FavoritePlaceDao
 
@@ -22,9 +28,9 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "citweety_database",
+                    "citweety_database"
                 )
-                    .allowMainThreadQueries() // Şimdilik testleri kolaylaştırmak için ana kolda çalıştırıyoruz
+                    .allowMainThreadQueries()
                     .build()
                 INSTANCE = instance
                 instance

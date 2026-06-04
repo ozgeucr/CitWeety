@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.ozgeucar.citweety.data.local.AppDatabase
 import com.ozgeucar.citweety.domain.model.FavoritePlace
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.collectAsState
 
 class FavoritesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

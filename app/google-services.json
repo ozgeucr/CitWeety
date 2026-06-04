@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119117078881",
+    "project_id": "citweety-travel-app",
+    "storage_bucket": "citweety-travel-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119117078881:android:22e7b3bc58c3d73da9e520",
+        "android_client_info": {
+          "package_name": "com.ozgeucar.citweety"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBxjCkVH57pi_2UusejXO7FA2fV8Jf48k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
