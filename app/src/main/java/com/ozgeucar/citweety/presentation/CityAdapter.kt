@@ -9,7 +9,7 @@ import com.ozgeucar.citweety.R
 import com.ozgeucar.citweety.domain.model.City
 import android.widget.ImageView
 class CityAdapter(
-    private val cities: List<City>,
+    private var cities: List<City>,
     private val onCityClick: (City) -> Unit // Tıklama olayını dışarıya haber verir
 ) : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
 
@@ -39,5 +39,10 @@ class CityAdapter(
         }
 
         holder.itemView.setOnClickListener { onCityClick(city) }
+    }
+
+    fun updateList(newList: List<City>) {
+        cities = newList
+        notifyDataSetChanged()
     }
 }

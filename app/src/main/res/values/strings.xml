@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CitWeety</string>
+    <string name="place_rating_format">⭐ %1$.1f</string>
 </resources>
