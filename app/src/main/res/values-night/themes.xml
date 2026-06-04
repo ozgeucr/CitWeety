@@ -1,7 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <style name="Base.Theme.CitWeety" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorPrimaryDark">#050C1A</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="android:windowBackground">@color/bg_main_dark</item>
     </style>
 </resources>

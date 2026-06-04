@@ -3,12 +3,13 @@ package com.ozgeucar.citweety.domain.model
 data class Place(
     val id: String,
     val name: String,
-    val category: String,
+    val cityName: String, // 🎯 MODÜLERLİK SİHRİ: Mekanın hangi şehre ait olduğunu burası söyleyecek!
+    val category: String, // Street Food, Culture, vb.
     val description: String,
     val latitude: Double,
     val longitude: Double,
-    val imageUrl: String, // Ana kapak resmi
+    val imageUrl: String,
     val rating: Float,
-    val galleryImages: List<String> = listOf(), // Kaydırılabilir fotoğraflar
-    val reviews: List<Review> = listOf() // Kullanıcı yorumları
+    var isFavorite: Boolean = false,
+    var isVisited: Boolean = false
 )

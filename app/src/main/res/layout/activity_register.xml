@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@drawable/bg_login_gradient">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="28dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yeni Profil Oluştur"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CitWety dünyasına katıl ve keşfetmeye başla"
+            android:textColor="#A0AEC0"
+            android:textSize="14sp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/etRegisterFullName"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Adınız ve Soyadınız"
+            android:textColorHint="#94A3B8"
+            android:textColor="#FFFFFF"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="14dp"/>
+
+        <EditText
+            android:id="@+id/etRegisterUsername"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Kullanıcı Adı (Örn: gezgin_ruh)"
+            android:textColorHint="#94A3B8"
+            android:textColor="#FFFFFF"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:inputType="text"
+            android:layout_marginBottom="14dp"/>
+
+        <EditText
+            android:id="@+id/etRegisterEmail"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="E-posta Adresin"
+            android:textColorHint="#94A3B8"
+            android:textColor="#FFFFFF"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="14dp"/>
+
+        <EditText
+            android:id="@+id/etRegisterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Şifren (En az 6 karakter)"
+            android:textColorHint="#94A3B8"
+            android:textColor="#FFFFFF"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:inputType="textPassword"
+            android:layout_marginBottom="14dp"/>
+
+        <EditText
+            android:id="@+id/etRegisterAge"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Yaşınız"
+            android:textColorHint="#94A3B8"
+            android:textColor="#FFFFFF"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:inputType="number"
+            android:layout_marginBottom="14dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerGender"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_input_field"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:layout_marginBottom="14dp" />
+
+        <EditText
+            android:id="@+id/etRegisterHometown"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="Memleketiniz (Hometown)"
+            android:textColorHint="#94A3B8"
+            android:textColor="#FFFFFF"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="28dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRegisterSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_rating_chip"
+            android:backgroundTint="@color/accent"
+            android:text="Hesap Oluştur"
+            android:textColor="#102A43"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:id="@+id/tvGoToLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zaten bir hesabın var mı? Giriş Yap"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:padding="8dp"/>
+    </LinearLayout>
+</ScrollView>

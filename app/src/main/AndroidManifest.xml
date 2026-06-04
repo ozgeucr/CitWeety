@@ -2,11 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- İnternet bağlantısı için gerekli -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Konum için gerekli -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Sesli asistan için mikrofon izni -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,30 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CitWeety">
 
-        <!-- Favoriler Sayfası -->
-        <activity
-            android:name=".FavoritesActivity"
-            android:exported="false" />
-
-        <!-- Sesli Asistan Sayfası -->
-        <activity
-            android:name=".VoiceAssistantActivity"
-            android:exported="false" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDiDImQmO0hIEmY-OdL4xZ3b989xSgR7LU" />
 
         <activity
-            android:name=".EmergencyActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".PlaceDetailActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".PlacesActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".MainActivity"
+            android:name=".presentation.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +37,51 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.CitWeety" />
+
+        <activity
+            android:name=".presentation.RegisterActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".presentation.ProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".presentation.BudgetActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".presentation.FavoritesActivity"
+            android:exported="false"
+            android:label="Kişisel Favorilerim"
+            android:theme="@style/Theme.CitWeety" />
+
+        <activity
+            android:name=".presentation.HometownDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".presentation.VoiceAssistantActivity"
+            android:exported="false"
+            android:label="@string/title_activity_voice_assistant"
+            android:theme="@style/Theme.CitWeety" />
+
+        <activity
+            android:name=".presentation.EmergencyActivity"
+            android:exported="false"
+            android:label="@string/title_activity_emergency"
+            android:theme="@style/Theme.CitWeety" />
+
+        <activity
+            android:name=".PlacesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.BudgetListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

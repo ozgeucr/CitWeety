@@ -1,27 +1,9 @@
 <resources>
     <string name="app_name">CitWeety</string>
-    <string name="place_rating_format">⭐ %1$.1f</string>
-    <string name="city_search_hint">Search for a city in Europe…</string>
-    <string name="favorites_title">My Favorites</string>
-    <string name="emergency_title">Emergency Guide</string>
-    <string name="emergency_subtitle">Tap the number to call for help</string>
-    <string name="police">POLICE (112)</string>
-    <string name="ambulance">AMBULANCE (112)</string>
-    <string name="fire_brigade">FIRE BRIGADE (112)</string>
-    <string name="voice_assistant_title">Voice Assistant</string>
-    <string name="category_all">All</string>
-    <string name="category_food">Food</string>
-    <string name="category_culture">Culture</string>
-    <string name="map_button">Show on Map</string>
-    <string name="reviews_title">User Reviews</string>
-    <string name="added_to_favorites">Added to favorites!</string>
-    <string name="removed_from_favorites">Removed from favorites</string>
-    <string name="coming_soon_format">%s coming soon!</string>
-    <string name="voice_assistant_subtitle">Listen to essential phrases in the local language</string>
-    <string name="speaking_toast_format">Speaking: %s</string>
-    <string name="place_name_placeholder">Place Name</string>
-    <string name="category_placeholder">Category</string>
-    <string name="description_placeholder">Description</string>
-    <string name="user_name_placeholder">User Name</string>
-    <string name="review_placeholder">Great place!</string>
+    <string name="navigation_drawer_open">Menüyü Aç</string>
+    <string name="navigation_drawer_close">Menüyü Kapat</string>
+    <string name="title_activity_emergency">EmergencyActivity</string>
+    <string name="title_activity_voice_assistant">VoiceAssistantActivity</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 </resources>

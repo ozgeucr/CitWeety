@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/bg_login_gradient"
+    android:padding="28dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="6dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cit"
+            android:textColor="#D1D5DB"
+            android:textSize="44sp"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="-0.02"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weety"
+            android:textColor="@color/accent"
+            android:textSize="44sp"
+            android:fontFamily="sans-serif-black"
+            android:textStyle="bold"
+            android:letterSpacing="-0.02"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dünyayı keşfetmeye hazır mısın?"
+        android:textColor="#A0AEC0"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginBottom="44dp"/>
+
+    <EditText
+        android:id="@+id/etLoginEmail"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="E-posta Adresin"
+        android:textColorHint="#94A3B8"
+        android:textColor="#FFFFFF"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:inputType="textEmailAddress"
+        android:textSize="15sp"
+        android:layout_marginBottom="14dp"/>
+
+    <EditText
+        android:id="@+id/etLoginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="Şifren"
+        android:textColorHint="#94A3B8"
+        android:textColor="#FFFFFF"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:inputType="textPassword"
+        android:textSize="15sp"
+        android:layout_marginBottom="24dp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/bg_rating_chip"
+        android:backgroundTint="@color/accent"
+        android:text="Giriş Yap"
+        android:textColor="#102A43"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="22dp"/>
+
+    <TextView
+        android:id="@+id/tvGoToRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hesabın yok mu? Kayıt Ol"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:padding="8dp"/>
+</LinearLayout>

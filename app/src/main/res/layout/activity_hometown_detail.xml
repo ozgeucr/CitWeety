@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Üst Başlık -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/card_bg"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:elevation="4dp">
+
+            <TextView
+                android:id="@+id/tvHometownDetailLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keşif ve Rota Detayları"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.03"/>
+
+            <TextView
+                android:id="@+id/tvHometownDetailName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Şehir Adı"
+                android:textColor="@color/primary"
+                android:textSize="28sp"
+                android:fontFamily="sans-serif-black"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+        <!-- Harita -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_margin="12dp"
+            android:background="@drawable/bg_input_field">
+
+            <fragment
+                android:id="@+id/hometownMap"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".presentation.HometownDetailActivity" />
+        </FrameLayout>
+
+        <!-- Gezilecek Yerler Listesi -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginVertical="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gezilecek Önemli Yerler"
+                    android:textColor="@color/primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-bold"/>
+
+                <ImageButton
+                    android:id="@+id/btnAddPlace"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@android:color/transparent"
+                    android:src="@android:drawable/ic_input_add"
+                    app:tint="@color/primary" />
+            </LinearLayout>
+
+            <!-- ScrollView ile çakışmaması için wrap_content ve nestedScrollingEnabled false yapıldı -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHometownPlaces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_place_row"/>
+        </LinearLayout>
+
+        <!-- İŞTE BEKLEDİĞİMİZ AN: LEZZET DURAKLARI -->
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_view_local_food"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"/>
+
+    </LinearLayout>
+</ScrollView>
