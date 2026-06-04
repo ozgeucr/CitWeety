@@ -31,7 +31,7 @@
                     android:id="@+id/textViewDetailName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mekan Adı"
+                    android:text="@string/place_name_placeholder"
                     android:textColor="#333333"
                     android:textSize="28sp"
                     android:textStyle="bold" />
@@ -48,7 +48,7 @@
                         android:layout_height="wrap_content"
                         android:background="#E3F2FD"
                         android:padding="4dp"
-                        android:text="Kategori"
+                        android:text="@string/category_placeholder"
                         android:textColor="#1976D2"
                         android:textSize="14sp" />
 
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:lineSpacingExtra="4sp"
-                    android:text="Açıklama"
+                    android:text="@string/description_placeholder"
                     android:textColor="#666666"
                     android:textSize="16sp" />
 
@@ -83,15 +83,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:backgroundTint="#FFC107"
-                    android:text="Haritada Göster"
+                    android:text="@string/map_button"
                     android:textColor="#000000" />
 
-                <!-- Yorumlar Bölümü -->
+                <!-- Reviews Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
-                    android:text="Kullanıcı Yorumları"
+                    android:text="@string/reviews_title"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#333333" />
@@ -117,6 +117,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:backgroundTint="#FFFFFF"
         app:tint="#D32F2F"
-        android:contentDescription="Favorilere Ekle" />
+        android:contentDescription="@string/favorites_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -63,7 +63,7 @@ class VoiceAssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener 
         tts.setLanguage(locale)
         
         tts.speak(phrase.local, TextToSpeech.QUEUE_FLUSH, null, "")
-        Toast.makeText(this, "Seslendiriliyor: ${phrase.local}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.speaking_toast_format, phrase.local), Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

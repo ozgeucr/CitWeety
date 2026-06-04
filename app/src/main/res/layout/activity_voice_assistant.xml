@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sesli Telaffuz Rehberi"
+        android:text="@string/voice_assistant_title"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#1A237E"
@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Yerel dilde temel kelimeleri dinle"
+        android:text="@string/voice_assistant_subtitle"
         android:textSize="16sp"
         android:textColor="#546E7A"
         android:layout_marginBottom="16dp"/>

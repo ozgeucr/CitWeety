@@ -54,10 +54,10 @@ class PlaceDetailActivity : AppCompatActivity() {
             fabFavorite.setOnClickListener {
                 if (DataManager.favoritePlaces.contains(currentPlace)) {
                     DataManager.favoritePlaces.remove(currentPlace)
-                    Toast.makeText(this, "Favorilerden çıkarıldı", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT).show()
                 } else {
                     DataManager.favoritePlaces.add(currentPlace)
-                    Toast.makeText(this, "Favorilere eklendi!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.added_to_favorites), Toast.LENGTH_SHORT).show()
                 }
                 updateFavoriteIcon(fabFavorite, currentPlace)
             }

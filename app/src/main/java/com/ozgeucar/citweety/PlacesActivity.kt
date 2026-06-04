@@ -24,7 +24,7 @@ class PlacesActivity : AppCompatActivity() {
         val btnFood = findViewById<Button>(R.id.btnFood)
         val btnCulture = findViewById<Button>(R.id.btnCulture)
 
-        val cityName = intent.getStringExtra("CITY_NAME") ?: "Şehir"
+        val cityName = intent.getStringExtra("CITY_NAME") ?: "City"
         textViewTitle.text = cityName
 
         val places = DataManager.currentCityPlaces
@@ -43,12 +43,12 @@ class PlacesActivity : AppCompatActivity() {
         }
 
         btnFood.setOnClickListener {
-            val filtered = places.filter { it.category == "Yemekler" }
+            val filtered = places.filter { it.category == "Food" }
             adapter.updateList(filtered)
         }
 
         btnCulture.setOnClickListener {
-            val filtered = places.filter { it.category == "Kültür" }
+            val filtered = places.filter { it.category == "Culture" }
             adapter.updateList(filtered)
         }
     }

@@ -34,7 +34,7 @@
                 android:id="@+id/textViewCityName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ZİELONA GÓRA"
+                android:text="CITY NAME"
                 android:textColor="#FFC107"
                 android:textSize="26sp"
                 android:textStyle="bold" />

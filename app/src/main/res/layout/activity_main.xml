@@ -45,7 +45,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/btn_star_big_on"
             app:tint="#FFC107"
-            android:contentDescription="Favorilerim" />
+            android:contentDescription="@string/favorites_title" />
     </LinearLayout>
 
     <androidx.appcompat.widget.SearchView
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:background="#FFFFFF"
-        app:queryHint="Avrupa'da bir şehir ara..."
+        app:queryHint="@string/city_search_hint"
         app:iconifiedByDefault="false"
         app:layout_constraintTop_toBottomOf="@id/headerLayout" />
 
@@ -76,7 +76,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="#FFFFFF"
-        android:contentDescription="Acil Durum" />
+        android:contentDescription="@string/emergency_title" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabVoice"
@@ -89,6 +89,6 @@
         app:layout_constraintBottom_toTopOf="@id/fabEmergency"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="#FFFFFF"
-        android:contentDescription="Sesli Asistan" />
+        android:contentDescription="@string/voice_assistant_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

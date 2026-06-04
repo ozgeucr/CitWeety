@@ -44,7 +44,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_btn_speak_now"
             app:tint="#2196F3"
-            android:contentDescription="Seslendir" />
+            android:contentDescription="@string/voice_assistant_title" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

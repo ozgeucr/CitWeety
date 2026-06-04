@@ -34,20 +34,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Hepsi" />
+                android:text="@string/category_all" />
 
             <Button
                 android:id="@+id/btnFood"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Yemekler" />
+                android:text="@string/category_food" />
 
             <Button
                 android:id="@+id/btnCulture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kültür" />
+                android:text="@string/category_culture" />
         </LinearLayout>
     </HorizontalScrollView>
 

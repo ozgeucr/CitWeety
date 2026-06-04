@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Acil Durum Rehberi"
+        android:text="@string/emergency_title"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#D32F2F"
@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Yardım çağırmak için numaraya dokun"
+        android:text="@string/emergency_subtitle"
         android:textSize="16sp"
         android:layout_marginBottom="40dp"
         android:textColor="#555555"/>
@@ -29,7 +29,7 @@
         android:id="@+id/btnCallPolice"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="POLİS (112)"
+        android:text="@string/police"
         android:textSize="20sp"
         android:backgroundTint="#1976D2"
         android:layout_marginBottom="16dp"/>
@@ -39,7 +39,7 @@
         android:id="@+id/btnCallAmbulance"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="AMBULANS (112)"
+        android:text="@string/ambulance"
         android:textSize="20sp"
         android:backgroundTint="#388E3C"
         android:layout_marginBottom="16dp"/>
@@ -49,7 +49,7 @@
         android:id="@+id/btnCallFire"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="İTFAİYE (112)"
+        android:text="@string/fire_brigade"
         android:textSize="20sp"
         android:backgroundTint="#F44336"/>
 
