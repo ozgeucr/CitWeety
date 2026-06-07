@@ -29,13 +29,19 @@
             android:value="AIzaSyDiDImQmO0hIEmY-OdL4xZ3b989xSgR7LU" />
 
         <activity
-            android:name=".presentation.LoginActivity"
-            android:exported="true">
+            android:name=".presentation.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.CitWeety">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".presentation.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.CitWeety" />
 
         <activity
             android:name=".MainActivity"
