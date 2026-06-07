@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,17 +30,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.Fragment
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.ozgeucar.citweety.R
 import com.ozgeucar.citweety.domain.model.CityItem
 
 class HomeFragment : Fragment() {
@@ -48,17 +50,17 @@ class HomeFragment : Fragment() {
     private val gson = Gson()
 
     private val allEuropeanCities = listOf(
-        CityItem("Barselona", "🇪🇸 İspanya", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Paris", "🇫🇷 Fransa", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Amsterdam", "🇳🇱 Hollanda", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Berlin", "🇩🇪 Almanya", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Roma", "🇮🇹 İtalya", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Prag", "🇨🇿 Çekya", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Viyana", "🇦🇹 Avusturya", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Budapeşte", "🇭🇺 Macaristan", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Brüksel", "🇧🇪 Belçika", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Varşova", "🇵🇱 Polonya", com.ozgeucar.citweety.R.drawable.ic_launcher_background),
-        CityItem("Wroclaw", "🇵🇱 Polonya", com.ozgeucar.citweety.R.drawable.ic_launcher_background)
+        CityItem("Barselona", "🇪🇸 İspanya", R.drawable.ic_launcher_background),
+        CityItem("Paris", "🇫🇷 Fransa", R.drawable.ic_launcher_background),
+        CityItem("Amsterdam", "🇳🇱 Hollanda", R.drawable.ic_launcher_background),
+        CityItem("Berlin", "🇩🇪 Almanya", R.drawable.ic_launcher_background),
+        CityItem("Roma", "🇮🇹 İtalya", R.drawable.ic_launcher_background),
+        CityItem("Prag", "🇨🇿 Çekya", R.drawable.ic_launcher_background),
+        CityItem("Viyana", "🇦🇹 Avusturya", R.drawable.ic_launcher_background),
+        CityItem("Budapeşte", "🇭🇺 Macaristan", R.drawable.ic_launcher_background),
+        CityItem("Brüksel", "🇧🇪 Belçika", R.drawable.ic_launcher_background),
+        CityItem("Varşova", "🇵🇱 Polonya", R.drawable.ic_launcher_background),
+        CityItem("Wroclaw", "🇵🇱 Polonya", R.drawable.ic_launcher_background)
     )
 
     override fun onCreateView(
@@ -84,22 +86,16 @@ class HomeFragment : Fragment() {
         var myRouteList by remember { mutableStateOf(loadCitiesFromDisk(context)) }
         var showDialog by remember { mutableStateOf(false) }
 
-// === DÜZELTME: Bütçe verilerini "hometown" ismiyle değil, aktif seyahatin ID'si ile çekmeliyiz ===
-        // Bütçe listesindeki tüm seyahatleri dinleyip en son eklenen (aktif) seyahati buluyoruz
         val savedTrips by dataStore.getTripsFlow.collectAsState(initial = "[]")
         val trips = remember(savedTrips) {
             val type = object : TypeToken<List<com.ozgeucar.citweety.domain.model.TripBudget>>() {}.type
             gson.fromJson<List<com.ozgeucar.citweety.domain.model.TripBudget>>(savedTrips, type) ?: emptyList()
         }
 
-        // En son eklenen seyahatin ID'sini alıyoruz (Eğer henüz hiç plan yoksa varsayılan olarak hometown kalır)
         val activeTripId = trips.lastOrNull()?.id ?: hometown
-
-        // Ana ekrandaki bütçe kartına artık gerçek ID üzerinden anlık verileri basıyoruz
         val savedExpenses by dataStore.getExpensesFlow(activeTripId).collectAsState(initial = "[]")
         val totalBudget by dataStore.getTotalBudgetFlow(activeTripId).collectAsState(initial = 0.0)
         val currency by dataStore.getCurrencyFlow(activeTripId).collectAsState(initial = "€")
-        // ==============================================================================================
 
         val expenses = remember(savedExpenses) {
             val type = object : TypeToken<List<ExpenseItem>>() {}.type
@@ -119,7 +115,6 @@ class HomeFragment : Fragment() {
             }
         )
 
-        // Firestore'dan kullanıcının memleketini (hometown) çekiyoruz
         LaunchedEffect(Unit) {
             val uid = auth.currentUser?.uid
             if (uid != null) {
@@ -127,7 +122,7 @@ class HomeFragment : Fragment() {
                     .addOnSuccessListener { document ->
                         val city = document.getString("hometown") ?: "Zielona Góra"
                         hometown = city
-                        saveHometownToDisk(context, city) // Diske kaydettik!
+                        saveHometownToDisk(context, city)
                     }
             }
         }
@@ -140,9 +135,9 @@ class HomeFragment : Fragment() {
                         val newList = myRouteList.toMutableList().apply { add(selectedCity) }
                         myRouteList = newList
                         saveCitiesToDisk(context, newList)
-                        Toast.makeText(context, "${selectedCity.name} rotaya eklendi! ✈️", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.home_city_added_toast, selectedCity.name), Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(context, "Bu şehir zaten rotanda var!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.home_city_exists_toast), Toast.LENGTH_SHORT).show()
                     }
                     showDialog = false
                 }
@@ -155,21 +150,19 @@ class HomeFragment : Fragment() {
                 .background(Color(0xFFF8F9FA))
                 .padding(16.dp)
         ) {
-            // Kaydırılabilir içerik alanı
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = "Mevcut Şehrin (Hometown)",
+                    text = stringResource(R.string.home_hometown_title),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                // === DÜZELTME: Buradaki clickable da düzeltildi ===
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -183,26 +176,22 @@ class HomeFragment : Fragment() {
                             context.startActivity(intent)
                         },
                     shape = RoundedCornerShape(28.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8D6)), // Sarı Panel
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8D6)),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(text = hometown, color = Color.Black, fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = "🎓 Mevcut Durduğun Şehir", color = Color.DarkGray, fontSize = 14.sp)
+                        Text(text = stringResource(R.string.home_hometown_subtitle), color = Color.DarkGray, fontSize = 14.sp)
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Erasmus maceranın merkezi 💫", color = Color.Gray, fontSize = 12.sp)
+                        Text(text = stringResource(R.string.home_hometown_desc), color = Color.Gray, fontSize = 12.sp)
                     }
                 }
-                // ==================================================
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // ====================================================================
-                // 💰 BÜTÇE ÖZETİ PANELİ (Yeni Eklenen Özellik)
-                // ====================================================================
                 Text(
-                    text = "Bütçe Durumu",
+                    text = stringResource(R.string.home_budget_title),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray,
@@ -226,7 +215,7 @@ class HomeFragment : Fragment() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text("Kalan Bakiye", color = Color.Gray, fontSize = 12.sp)
+                                Text(stringResource(R.string.home_budget_remaining), color = Color.Gray, fontSize = 12.sp)
                                 Text(
                                     "$currency${"%.2f".format(remainingBudget)}",
                                     fontSize = 24.sp,
@@ -257,7 +246,7 @@ class HomeFragment : Fragment() {
                         if (remainingBudget < totalBudget * 0.1) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                "⚠️ Dikkat! Bütçeniz bitmek üzere.",
+                                stringResource(R.string.home_budget_warning),
                                 color = Color(0xFFD32F2F),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold
@@ -268,23 +257,19 @@ class HomeFragment : Fragment() {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // ====================================================================
-                // 🎯 ROTA PLANIM BÖLÜMÜ - SOFT SARI PANEL (COMPOSE İLE YAZILDI)
-                // ====================================================================
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    shape = RoundedCornerShape(28.dp), // Köşeler yuvarlatıldı
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8D6)), // Pastel Sarı Renk
+                    shape = RoundedCornerShape(28.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8D6)),
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 20.dp) // İç boşluk
+                            .padding(vertical = 20.dp)
                     ) {
-                        // Başlık ve Buton Satırı
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -293,10 +278,10 @@ class HomeFragment : Fragment() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Rota Planım (Gezilecek Yerler)",
+                                text = stringResource(R.string.home_route_title),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF333333) // Okunabilirliği artıran koyu gri ton
+                                color = Color(0xFF333333)
                             )
                             IconButton(
                                 onClick = { showDialog = true },
@@ -304,16 +289,15 @@ class HomeFragment : Fragment() {
                                     .background(Color(0xFFFFC107), shape = RoundedCornerShape(8.dp))
                                     .size(36.dp)
                             ) {
-                                Icon(imageVector = Icons.Default.Add, contentDescription = "Şehir Ekle", tint = Color.Black)
+                                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.home_add_city_desc), tint = Color.Black)
                             }
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Şehir Kartları Listesi
                         LazyRow(
                             modifier = Modifier.fillMaxWidth(),
-                            contentPadding = PaddingValues(horizontal = 16.dp), // Kartların sağda/solda kesilmemesi için
+                            contentPadding = PaddingValues(horizontal = 16.dp),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             items(myRouteList) { city ->
@@ -329,61 +313,49 @@ class HomeFragment : Fragment() {
                                         val newList = myRouteList.toMutableList().apply { remove(city) }
                                         myRouteList = newList
                                         saveCitiesToDisk(context, newList)
-                                        Toast.makeText(context, "${city.name} rotadan silindi.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, context.getString(R.string.home_city_deleted_toast, city.name), Toast.LENGTH_SHORT).show()
                                     }
                                 )
                             }
                         }
                     }
                 }
-                // ====================================================================
-
             }
 
-            // EN ALTTA SABİT DURACAK BUTONLAR
             Column(modifier = Modifier.padding(top = 16.dp)) {
                 Button(
                     onClick = { context.startActivity(Intent(context, FavoritesActivity::class.java)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE91E63)),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("💖 Kişisel Favorilerim", fontSize = 16.sp, color = Color.White)
+                    Text(stringResource(R.string.home_btn_favorites), fontSize = 16.sp, color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
                     onClick = { context.startActivity(Intent(context, VoiceAssistantActivity::class.java)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("🗣️ Sesli Dil Asistanı", fontSize = 16.sp)
+                    Text(stringResource(R.string.home_btn_assistant), fontSize = 16.sp)
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
                     onClick = { context.startActivity(Intent(context, EmergencyActivity::class.java)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("🚨 Acil Durum Rehberi", fontSize = 16.sp, color = Color.White)
+                    Text(stringResource(R.string.home_btn_emergency), fontSize = 16.sp, color = Color.White)
                 }
             }
         }
-
-        // === DÜZELTME: Dialog tekrarlanmış, kaldırıldı (yukarıda zaten var) ===
     }
 
-    // === DÜZELTME: RouteCityCard - indication = null ===
     @Composable
     fun RouteCityCard(city: CityItem, onClick: () -> Unit, onDeleteClick: () -> Unit) {
         Card(
@@ -392,7 +364,7 @@ class HomeFragment : Fragment() {
                 .height(200.dp)
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = null // ÖNEMLİ: indication = null
+                    indication = null
                 ) { onClick() },
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
@@ -413,13 +385,12 @@ class HomeFragment : Fragment() {
                     onClick = onDeleteClick,
                     modifier = Modifier.align(Alignment.TopEnd)
                 ) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Sil", tint = Color.Red.copy(alpha = 0.8f))
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.home_delete_desc), tint = Color.Red.copy(alpha = 0.8f))
                 }
             }
         }
     }
 
-    // === DÜZELTME: SearchCityDialog - indication = null ===
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SearchCityDialog(onDismiss: () -> Unit, onCitySelected: (CityItem) -> Unit) {
@@ -429,7 +400,6 @@ class HomeFragment : Fragment() {
             it.name.contains(searchQuery, ignoreCase = true) || it.country.contains(searchQuery, ignoreCase = true)
         }
 
-        // Burada interactionSource tekrar oluşturulmalı
         val rowInteractionSource = remember { MutableInteractionSource() }
 
         Dialog(onDismissRequest = onDismiss) {
@@ -444,8 +414,8 @@ class HomeFragment : Fragment() {
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
-                        label = { Text("Şehir veya Ülke Ara") },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Ara İkonu") },
+                        label = { Text(stringResource(R.string.home_search_hint)) },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = stringResource(R.string.home_search_desc)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp)
@@ -460,7 +430,7 @@ class HomeFragment : Fragment() {
                                     .fillMaxWidth()
                                     .clickable(
                                         interactionSource = rowInteractionSource,
-                                        indication = null // ÖNEMLİ: indication = null
+                                        indication = null
                                     ) { onCitySelected(city) }
                                     .padding(vertical = 14.dp, horizontal = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,

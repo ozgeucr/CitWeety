@@ -13,4 +13,87 @@
     <string name="app_language_title">Uygulama Dili</string>
     <string name="logout_button">Çıkış Yap</string>
     <string name="logout_success">Başarıyla çıkış yapıldı! 👋</string>
+    <string name="home_hometown_title">Mevcut Şehrin (Hometown)</string>
+    <string name="home_hometown_subtitle">🎓 Mevcut Durduğun Şehir</string>
+    <string name="home_hometown_desc">Erasmus maceranın merkezi 💫</string>
+    <string name="home_budget_title">Bütçe Durumu</string>
+    <string name="home_budget_remaining">Kalan Bakiye</string>
+    <string name="home_budget_warning">⚠️ Dikkat! Bütçeniz bitmek üzere.</string>
+    <string name="home_route_title">Rota Planım (Gezilecek Yerler)</string>
+    <string name="home_add_city_desc">Şehir Ekle</string>
+    <string name="home_city_added_toast">%1$s rotaya eklendi! ✈️</string>
+    <string name="home_city_exists_toast">Bu şehir zaten rotanda var!</string>
+    <string name="home_city_deleted_toast">%1$s rotadan silindi.</string>
+    <string name="home_delete_desc">Sil</string>
+    <string name="home_search_hint">Şehir veya Ülke Ara</string>
+    <string name="home_search_desc">Ara İkonu</string>
+    <string name="home_btn_favorites">💖 Kişisel Favorilerim</string>
+    <string name="home_btn_assistant">🗣️ Sesli Dil Asistanı</string>
+    <string name="home_btn_emergency">🚨 Acil Durum Rehberi</string>
+    <string name="budget_list_title">Seyahat Bütçelerim</string>
+    <string name="budget_add_city_desc">Şehir Ekle</string>
+    <string name="budget_empty_title">Henüz Plan Yok</string>
+    <string name="budget_empty_desc">Yeni bir seyahat bütçesi oluşturmak için aşağıdaki sarı butona bas!</string>
+    <string name="budget_prefix">Bütçe: %1$s%2$s</string>
+    <string name="budget_delete_desc">Sil</string>
+    <string name="budget_dialog_title">Yeni Seyahat Planı</string>
+    <string name="budget_dialog_city_hint">Gidilecek Şehir</string>
+    <string name="budget_dialog_currency_title">Para Birimi</string>
+    <string name="budget_dialog_amount_hint">Başlangıç Bütçesi</string>
+    <string name="budget_dialog_cancel">Vazgeç</string>
+    <string name="budget_dialog_confirm">Planı Oluştur</string>
+
+    <string name="detail_planned_route">Planlanan Keşif ve Rota Detayları ✈️</string>
+    <string name="detail_current_city">Mevcut Durduğun Şehir Detayları 🎓</string>
+    <string name="detail_adding_map_toast">%1$s haritaya ekleniyor... 📍</string>
+    <string name="detail_address_not_found">Adresin tam konumu bulunamadı :(</string>
+    <string name="detail_place_added_toast">%1$s rotana işlendi! 📍</string>
+    <string name="detail_place_exists_toast">Bu mekan zaten listende ekli canım!</string>
+    <string name="fav_title">Kişisel Favorilerim</string>
+    <string name="fav_add_new_title">Yeni Keşif Ekle 📌</string>
+    <string name="fav_place_name_hint">Mekan Adı (Örn: Manekin)</string>
+    <string name="fav_notes_hint">Notlar (Örn: Krepleri efsane!)</string>
+    <string name="fav_save_btn">Favorilere Kaydet</string>
+    <string name="fav_saved_places">Kaydedilen Mekanlar</string>
+    <string name="fav_empty_list">Henüz favori mekan eklemedin. 💔</string>
+    <string name="fav_remove_desc">Favorilerden Çıkar</string>
+
+    <string name="voice_default_title">Sesli Dil Asistanı</string>
+    <string name="voice_back_desc">Geri</string>
+    <string name="voice_search_country_hint">Ülke ara...</string>
+    <string name="voice_fav_desc">Favori</string>
+    <string name="voice_search_phrase_hint">Kelime vagy çeviri ara...</string>
+    <string name="voice_speak_desc">Seslendir</string>
+
+    <string name="emergency_default_title">Acil Durum Rehberi</string>
+    <string name="emergency_title_format">%1$s Acil Durum Rehberi 📍</string>
+    <string name="emergency_permission_denied">Konum izni reddedildi. Varsayılan numaralar gösteriliyor.</string>
+    <string name="emergency_call_desc">Ara</string>
+
+    <string name="budget_detail_title">Bütçe Takibi</string>
+    <string name="budget_detail_add_desc">Ekle</string>
+    <string name="budget_detail_remaining">Kalan Bütçe</string>
+    <string name="budget_detail_total">Toplam Bütçe</string>
+    <string name="budget_detail_warning">⚠️ Günlük harcama limitini aştınız! (Bugün: %1$s%2$s)</string>
+    <string name="budget_detail_expenses_title">Harcamalar</string>
+    <string name="budget_detail_delete_desc">Sil</string>
+    <string name="budget_edit_title">Bütçeyi Düzenle</string>
+    <string name="budget_edit_currency_title">Para Birimi Seçin</string>
+    <string name="budget_edit_amount_hint">Toplam Bütçe (%1$s)</string>
+    <string name="budget_edit_cancel">İptal</string>
+    <string name="budget_edit_save">Kaydet</string>
+    <string name="budget_add_title">Yeni Harcama Ekle</string>
+    <string name="budget_add_item_hint">Neye harcadın?</string>
+    <string name="budget_add_amount_hint">Tutar (%1$s)</string>
+    <string name="budget_add_note_hint">Not (Opsiyonel)</string>
+    <string name="budget_add_category_title">Kategori</string>
+    <string name="budget_add_btn">Ekle</string>
+
+    <string-array name="budget_categories">
+        <item>Yemek</item>
+        <item>Ulaşım</item>
+        <item>Müze/Aktivite</item>
+        <item>Alışveriş</item>
+        <item>Diğer</item>
+    </string-array>
 </resources>
