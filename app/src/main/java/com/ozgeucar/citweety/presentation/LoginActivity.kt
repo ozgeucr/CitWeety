@@ -17,17 +17,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
-
-        // Eğer kullanıcı daha önce giriş yaptıysa direkt ana sayfaya atsın (Auto-login)
-        if (auth.currentUser != null) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
 
         val etEmail = findViewById<EditText>(R.id.etLoginEmail)
         val etPassword = findViewById<EditText>(R.id.etLoginPassword)
