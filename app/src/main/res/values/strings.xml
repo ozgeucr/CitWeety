@@ -4,6 +4,13 @@
     <string name="navigation_drawer_close">Menüyü Kapat</string>
     <string name="title_activity_emergency">EmergencyActivity</string>
     <string name="title_activity_voice_assistant">VoiceAssistantActivity</string>
-    <string name="nav_open">Open</string>
-    <string name="nav_close">Close</string>
+    <string name="nav_open">Menüyü Aç</string>
+    <string name="nav_close">Menüyü Kapat</string>
+
+    <string name="profile_settings_title">Profil &amp; Ayarlar</string>
+    <string name="email_not_found">Email bulunamadı</string>
+    <string name="dark_mode_title">Gece Modu</string>
+    <string name="app_language_title">Uygulama Dili</string>
+    <string name="logout_button">Çıkış Yap</string>
+    <string name="logout_success">Başarıyla çıkış yapıldı! 👋</string>
 </resources>

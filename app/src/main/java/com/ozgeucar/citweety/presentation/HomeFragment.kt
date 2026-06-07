@@ -84,10 +84,22 @@ class HomeFragment : Fragment() {
         var myRouteList by remember { mutableStateOf(loadCitiesFromDisk(context)) }
         var showDialog by remember { mutableStateOf(false) }
 
-        // Bütçe verilerini çekiyoruz (Varsayılan olarak "hometown" bütçesini gösterelim)
-        val savedExpenses by dataStore.getExpensesFlow(hometown).collectAsState(initial = "[]")
-        val totalBudget by dataStore.getTotalBudgetFlow(hometown).collectAsState(initial = 0.0)
-        val currency by dataStore.getCurrencyFlow(hometown).collectAsState(initial = "€")
+// === DÜZELTME: Bütçe verilerini "hometown" ismiyle değil, aktif seyahatin ID'si ile çekmeliyiz ===
+        // Bütçe listesindeki tüm seyahatleri dinleyip en son eklenen (aktif) seyahati buluyoruz
+        val savedTrips by dataStore.getTripsFlow.collectAsState(initial = "[]")
+        val trips = remember(savedTrips) {
+            val type = object : TypeToken<List<com.ozgeucar.citweety.domain.model.TripBudget>>() {}.type
+            gson.fromJson<List<com.ozgeucar.citweety.domain.model.TripBudget>>(savedTrips, type) ?: emptyList()
+        }
+
+        // En son eklenen seyahatin ID'sini alıyoruz (Eğer henüz hiç plan yoksa varsayılan olarak hometown kalır)
+        val activeTripId = trips.lastOrNull()?.id ?: hometown
+
+        // Ana ekrandaki bütçe kartına artık gerçek ID üzerinden anlık verileri basıyoruz
+        val savedExpenses by dataStore.getExpensesFlow(activeTripId).collectAsState(initial = "[]")
+        val totalBudget by dataStore.getTotalBudgetFlow(activeTripId).collectAsState(initial = 0.0)
+        val currency by dataStore.getCurrencyFlow(activeTripId).collectAsState(initial = "€")
+        // ==============================================================================================
 
         val expenses = remember(savedExpenses) {
             val type = object : TypeToken<List<ExpenseItem>>() {}.type
