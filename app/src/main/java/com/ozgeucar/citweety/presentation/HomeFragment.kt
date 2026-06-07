@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.Fragment
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
@@ -77,9 +79,33 @@ class HomeFragment : Fragment() {
     @Composable
     fun HomeScreen() {
         val context = LocalContext.current
+        val dataStore = remember { DataStoreManager(context) }
         var hometown by remember { mutableStateOf(loadHometownFromDisk(context)) }
         var myRouteList by remember { mutableStateOf(loadCitiesFromDisk(context)) }
         var showDialog by remember { mutableStateOf(false) }
+
+        // Bütçe verilerini çekiyoruz (Varsayılan olarak "hometown" bütçesini gösterelim)
+        val savedExpenses by dataStore.getExpensesFlow(hometown).collectAsState(initial = "[]")
+        val totalBudget by dataStore.getTotalBudgetFlow(hometown).collectAsState(initial = 0.0)
+        val currency by dataStore.getCurrencyFlow(hometown).collectAsState(initial = "€")
+
+        val expenses = remember(savedExpenses) {
+            val type = object : TypeToken<List<ExpenseItem>>() {}.type
+            gson.fromJson<List<ExpenseItem>>(savedExpenses, type) ?: emptyList()
+        }
+
+        val totalSpent = expenses.sumOf { it.amount }
+        val remainingBudget = totalBudget - totalSpent
+        val progress = if (totalBudget > 0) (totalSpent / totalBudget).toFloat() else 0f
+
+        val animatedProgress by animateFloatAsState(targetValue = progress.coerceIn(0f, 1f))
+        val progressColor by animateColorAsState(
+            targetValue = when {
+                progress > 0.9f -> Color(0xFFF44336)
+                progress > 0.7f -> Color(0xFFFF9800)
+                else -> Color(0xFF4CAF50)
+            }
+        )
 
         // Firestore'dan kullanıcının memleketini (hometown) çekiyoruz
         LaunchedEffect(Unit) {
@@ -138,7 +164,12 @@ class HomeFragment : Fragment() {
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
-                        ) { /* ... */ },
+                        ) {
+                            val intent = Intent(context, HometownDetailActivity::class.java).apply {
+                                putExtra("HOMETOWN_NAME", hometown)
+                            }
+                            context.startActivity(intent)
+                        },
                     shape = RoundedCornerShape(28.dp),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8D6)), // Sarı Panel
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -152,6 +183,76 @@ class HomeFragment : Fragment() {
                     }
                 }
                 // ==================================================
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // ====================================================================
+                // 💰 BÜTÇE ÖZETİ PANELİ (Yeni Eklenen Özellik)
+                // ====================================================================
+                Text(
+                    text = "Bütçe Durumu",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            context.startActivity(Intent(context, BudgetListActivity::class.java))
+                        },
+                    shape = RoundedCornerShape(28.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text("Kalan Bakiye", color = Color.Gray, fontSize = 12.sp)
+                                Text(
+                                    "$currency${"%.2f".format(remainingBudget)}",
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (remainingBudget < 0) Color.Red else Color(0xFF1E3A5F)
+                                )
+                            }
+                            Text(
+                                text = "%${(progress * 100).toInt()}",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Black,
+                                color = progressColor
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        LinearProgressIndicator(
+                            progress = animatedProgress,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(10.dp),
+                            color = progressColor,
+                            trackColor = progressColor.copy(alpha = 0.2f),
+                            strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+                        )
+
+                        if (remainingBudget < totalBudget * 0.1) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                "⚠️ Dikkat! Bütçeniz bitmek üzere.",
+                                color = Color(0xFFD32F2F),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 

@@ -9,8 +9,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -29,7 +31,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 
-data class ExpenseItem(val id: String, val title: String, val amount: Double, val category: String)
+data class ExpenseItem(
+    val id: String,
+    val title: String,
+    val amount: Double,
+    val category: String,
+    val note: String = ""
+)
 
 class BudgetActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,25 +58,43 @@ fun BudgetScreen(tripId: String) {
 
     var expenses by remember { mutableStateOf(listOf<ExpenseItem>()) }
     var showAddDialog by remember { mutableStateOf(false) }
+    var showEditBudgetDialog by remember { mutableStateOf(false) }
 
-    // DÜZELTME: getExpensesFlow(tripId) kullanıldı
     val savedExpenses by dataStore.getExpensesFlow(tripId).collectAsState(initial = "[]")
+    val totalBudget by dataStore.getTotalBudgetFlow(tripId).collectAsState(initial = 0.0)
+    val currency by dataStore.getCurrencyFlow(tripId).collectAsState(initial = "€")
 
     LaunchedEffect(savedExpenses) {
         val type = object : TypeToken<List<ExpenseItem>>() {}.type
         expenses = gson.fromJson(savedExpenses, type) ?: emptyList()
     }
 
-    val totalBudget = 1000.0
     val totalSpent = expenses.sumOf { it.amount }
     val remainingBudget = totalBudget - totalSpent
-    val progress = (totalSpent / totalBudget).toFloat()
+    val progress = if (totalBudget > 0) (totalSpent / totalBudget).toFloat() else 0f
+
+    // Günlük harcama uyarısı için
+    val today = System.currentTimeMillis() / (24 * 60 * 60 * 1000)
+    val todaySpent = expenses.filter { (it.id.toLongOrNull() ?: 0L) / (24 * 60 * 60 * 1000) == today }.sumOf { it.amount }
+    val dailyLimit = totalBudget / 7 // Örnek: haftalık gezi varsayımıyla günlük limit
+    val showWarning = todaySpent > dailyLimit
 
     val animatedProgress by animateFloatAsState(targetValue = progress.coerceIn(0f, 1f))
-    val progressColor by animateColorAsState(targetValue = if (progress < 0.8f) Color(0xFF4CAF50) else Color(0xFFF44336))
+    val progressColor by animateColorAsState(
+        targetValue = when {
+            progress > 0.9f -> Color(0xFFF44336) // Kırmızı (Tehlike)
+            progress > 0.7f -> Color(0xFFFF9800) // Turuncu (Dikkat)
+            else -> Color(0xFF4CAF50) // Yeşil (Güvenli)
+        }
+    )
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Bütçe Takibi", fontWeight = FontWeight.Bold) }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1E3A5F), titleContentColor = Color.White)) },
+        topBar = { 
+            TopAppBar(
+                title = { Text("Bütçe Takibi", fontWeight = FontWeight.Bold) }, 
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1E3A5F), titleContentColor = Color.White)
+            ) 
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }, containerColor = Color(0xFFFFC107)) {
                 Icon(Icons.Default.Add, contentDescription = "Ekle", tint = Color.Black)
@@ -76,28 +102,72 @@ fun BudgetScreen(tripId: String) {
         }
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).background(Color(0xFFF8F9FA)).padding(16.dp)) {
-            Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(containerColor = Color.White), elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
+            // Bütçe Özeti Kartı
+            Card(
+                modifier = Modifier.fillMaxWidth(), 
+                shape = RoundedCornerShape(16.dp), 
+                colors = CardDefaults.cardColors(containerColor = Color.White), 
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                onClick = { showEditBudgetDialog = true }
+            ) {
                 Column(modifier = Modifier.padding(20.dp)) {
-                    Text("Kalan Bütçe", color = Color.Gray, fontSize = 14.sp)
-                    Text("€${"%.2f".format(remainingBudget)}", fontSize = 32.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF1E3A5F))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text("Kalan Bütçe", color = Color.Gray, fontSize = 14.sp)
+                            Text("$currency${"%.2f".format(remainingBudget)}", fontSize = 32.sp, fontWeight = FontWeight.ExtraBold, color = if (remainingBudget < 0) Color.Red else Color(0xFF1E3A5F))
+                        }
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text("Toplam Bütçe", color = Color.Gray, fontSize = 12.sp)
+                            Text("$currency${"%.2f".format(totalBudget)}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                    
                     Spacer(modifier = Modifier.height(16.dp))
-                    LinearProgressIndicator(progress = animatedProgress, modifier = Modifier.fillMaxWidth().height(8.dp), color = progressColor)
+                    
+                    LinearProgressIndicator(
+                        progress = animatedProgress, 
+                        modifier = Modifier.fillMaxWidth().height(12.dp), 
+                        color = progressColor,
+                        trackColor = progressColor.copy(alpha = 0.2f)
+                    )
+                    
+                    if (showWarning) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            "⚠️ Günlük harcama limitini aştınız! (Bugün: $currency${"%.2f".format(todaySpent)})",
+                            color = Color(0xFFD32F2F),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
 
-            LazyColumn(modifier = Modifier.padding(top = 16.dp)) {
-                items(expenses) { expense ->
-                    Card(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+            Text("Harcamalar", modifier = Modifier.padding(top = 24.dp, bottom = 8.dp), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(expenses.reversed()) { expense ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp), 
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                    ) {
                         Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(expense.title, fontWeight = FontWeight.Bold)
-                                Text(expense.category, fontSize = 12.sp, color = Color.Gray)
+                                if (expense.note.isNotBlank()) {
+                                    Text(expense.note, fontSize = 13.sp, color = Color.DarkGray, modifier = Modifier.padding(top = 2.dp))
+                                }
+                                Text(expense.category, fontSize = 11.sp, color = Color.Gray, modifier = Modifier.padding(top = 2.dp))
                             }
-                            Text("-€${"%.2f".format(expense.amount)}", color = Color.Red, fontWeight = FontWeight.Bold)
+                            Text("-$currency${"%.2f".format(expense.amount)}", color = Color(0xFFD32F2F), fontWeight = FontWeight.Bold)
                             IconButton(onClick = {
                                 val newList = expenses.filter { it.id != expense.id }
                                 expenses = newList
-                                // DÜZELTME: tripId parametresi eklendi
                                 scope.launch { dataStore.saveExpenses(tripId, gson.toJson(newList)) }
                             }) { Icon(Icons.Default.Delete, contentDescription = "Sil", tint = Color.LightGray) }
                         }
@@ -107,34 +177,124 @@ fun BudgetScreen(tripId: String) {
         }
 
         if (showAddDialog) {
-            AddExpenseDialog(onDismiss = { showAddDialog = false }, onAdd = { title, amount, cat ->
-                val newList = expenses + ExpenseItem(System.currentTimeMillis().toString(), title, amount, cat)
-                expenses = newList
-                // DÜZELTME: tripId parametresi eklendi
-                scope.launch { dataStore.saveExpenses(tripId, gson.toJson(newList)) }
-                showAddDialog = false
-            })
+            AddExpenseDialog(
+                currency = currency,
+                onDismiss = { showAddDialog = false },
+                onAdd = { title, amount, cat, note ->
+                    val newList = expenses + ExpenseItem(
+                        id = System.currentTimeMillis().toString(),
+                        title = title,
+                        amount = amount,
+                        category = cat,
+                        note = note
+                    )
+                    expenses = newList
+                    scope.launch { dataStore.saveExpenses(tripId, gson.toJson(newList)) }
+                    showAddDialog = false
+                }
+            )
+        }
+
+        if (showEditBudgetDialog) {
+            EditBudgetDialog(
+                currentBudget = totalBudget,
+                currentCurrency = currency,
+                onDismiss = { showEditBudgetDialog = false },
+                onConfirm = { newBudget, newCurrency ->
+                    scope.launch { 
+                        dataStore.saveTotalBudget(tripId, newBudget)
+                        dataStore.saveCurrency(tripId, newCurrency)
+                    }
+                    showEditBudgetDialog = false
+                }
+            )
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> Unit) {
+fun EditBudgetDialog(
+    currentBudget: Double, 
+    currentCurrency: String,
+    onDismiss: () -> Unit, 
+    onConfirm: (Double, String) -> Unit
+) {
+    var budgetText by remember { mutableStateOf(currentBudget.toString()) }
+    var selectedCurrency by remember { mutableStateOf(currentCurrency) }
+    val currencies = listOf("$", "€", "₺", "zł")
+
+    Dialog(onDismissRequest = onDismiss) {
+        Card(shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.background(Color.White).padding(20.dp)) {
+                Text("Bütçeyi Düzenle", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Text("Para Birimi Seçin", color = Color.Gray, fontSize = 12.sp)
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    currencies.forEach { curr ->
+                        FilterChip(
+                            selected = (selectedCurrency == curr),
+                            onClick = { selectedCurrency = curr },
+                            label = { Text(curr) },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFFFC107))
+                        )
+                    }
+                }
+
+                OutlinedTextField(
+                    value = budgetText,
+                    onValueChange = { budgetText = it },
+                    label = { Text("Toplam Bütçe ($selectedCurrency)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    TextButton(onClick = onDismiss) { Text("İptal") }
+                    Button(onClick = {
+                        val amount = budgetText.toDoubleOrNull() ?: currentBudget
+                        onConfirm(amount, selectedCurrency)
+                    }) { Text("Kaydet") }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddExpenseDialog(
+    currency: String, 
+    onDismiss: () -> Unit, 
+    onAdd: (String, Double, String, String) -> Unit
+) {
     var title by remember { mutableStateOf("") }
     var amountText by remember { mutableStateOf("") }
+    var note by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("Yemek") }
     val categories = listOf("Yemek", "Ulaşım", "Müze/Aktivite", "Alışveriş", "Diğer")
 
     Dialog(onDismissRequest = onDismiss) {
         Card(shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.background(Color.White).padding(20.dp)) {
+            Column(modifier = Modifier.background(Color.White).padding(20.dp).verticalScroll(rememberScrollState())) {
                 Text("Yeni Harcama Ekle", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.Black)
+                Spacer(modifier = Modifier.height(12.dp))
+                
                 OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Neye harcadın?") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = amountText, onValueChange = { amountText = it }, label = { Text("Tutar (€)") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                OutlinedTextField(value = amountText, onValueChange = { amountText = it }, label = { Text("Tutar ($currency)") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                OutlinedTextField(value = note, onValueChange = { note = it }, label = { Text("Not (Opsiyonel)") }, modifier = Modifier.fillMaxWidth())
+                
                 Text("Kategori", color = Color.Gray, fontSize = 12.sp, modifier = Modifier.padding(top = 16.dp))
                 Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    categories.forEach { cat ->
+                    categories.take(3).forEach { cat ->
                         FilterChip(
                             selected = (category == cat),
                             onClick = { category = cat },
@@ -143,11 +303,23 @@ fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> U
                         )
                     }
                 }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    categories.drop(3).forEach { cat ->
+                        FilterChip(
+                            selected = (category == cat),
+                            onClick = { category = cat },
+                            label = { Text(text = cat, fontSize = 11.sp) },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFFFC107))
+                        )
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onDismiss) { Text("İptal") }
                     Button(onClick = {
                         val amount = amountText.toDoubleOrNull() ?: 0.0
-                        if (title.isNotBlank() && amount > 0) onAdd(title, amount, category)
+                        if (title.isNotBlank() && amount > 0) onAdd(title, amount, category, note)
                     }) { Text("Ekle") }
                 }
             }

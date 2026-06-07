@@ -24,6 +24,8 @@ class DataStoreManager(private val context: Context) {
 
     // Her trip için dinamik anahtar oluştur
     private fun getExpensesKey(tripId: String) = stringPreferencesKey("expenses_$tripId")
+    private fun getBudgetKey(tripId: String) = stringPreferencesKey("budget_$tripId")
+    private fun getCurrencyKey(tripId: String) = stringPreferencesKey("currency_$tripId")
 
     // ============ Trip Yönetimi ============
 
@@ -64,6 +66,44 @@ class DataStoreManager(private val context: Context) {
     fun getExpensesFlow(tripId: String): Flow<String> {
         return context.dataStore.data.map { preferences ->
             preferences[getExpensesKey(tripId)] ?: EMPTY_LIST
+        }
+    }
+
+    // ============ Bütçe Yönetimi ============
+
+    /**
+     * Belirli bir seyahat için toplam bütçeyi kaydet
+     */
+    suspend fun saveTotalBudget(tripId: String, amount: Double) {
+        context.dataStore.edit { preferences ->
+            preferences[getBudgetKey(tripId)] = amount.toString()
+        }
+    }
+
+    /**
+     * Belirli bir seyahat için toplam bütçeyi Flow olarak getir
+     */
+    fun getTotalBudgetFlow(tripId: String): Flow<Double> {
+        return context.dataStore.data.map { preferences ->
+            preferences[getBudgetKey(tripId)]?.toDoubleOrNull() ?: 0.0
+        }
+    }
+
+    /**
+     * Belirli bir seyahat için para birimini kaydet
+     */
+    suspend fun saveCurrency(tripId: String, currency: String) {
+        context.dataStore.edit { preferences ->
+            preferences[getCurrencyKey(tripId)] = currency
+        }
+    }
+
+    /**
+     * Belirli bir seyahat için para birimini Flow olarak getir
+     */
+    fun getCurrencyFlow(tripId: String): Flow<String> {
+        return context.dataStore.data.map { preferences ->
+            preferences[getCurrencyKey(tripId)] ?: "€" // Varsayılan Euro
         }
     }
 
