@@ -129,5 +129,54 @@ private fun processLocation(context: Context, location: Location, onResult: (Str
     }.start()
 }
 
-fun getEmergencyContactsForCountry(countryCode: String): List<EmergencyContact> = getDefaultContacts()
-fun getDefaultContacts(): List<EmergencyContact> = listOf(EmergencyContact("Avrupa Acil Çağrı Merkezi", "112"))
+// 🚨 SENİN ESKİ KODUNDAKİ NUMARALARIN BİREBİR AYNISI 🚨
+fun getEmergencyContactsForCountry(countryCode: String): List<EmergencyContact> {
+    return when (countryCode.uppercase().trim()) {
+        "PL" -> getDefaultContacts()
+        "IT" -> listOf(
+            EmergencyContact("Avrupa Acil Çağrı Merkezi", "112"),
+            EmergencyContact("Polis (Carabinieri)", "112"),
+            EmergencyContact("Ambulans (Emergenza Sanitaria)", "118"),
+            EmergencyContact("Roma Umberto I Hastanesi", "+390649971"),
+            EmergencyContact("T.C. Roma Büyükelçiliği", "+3906445941")
+        )
+        "DE" -> listOf(
+            EmergencyContact("Avrupa Acil Çağrı Merkezi", "112"),
+            EmergencyContact("Polis (Polizei)", "110"),
+            EmergencyContact("İtfaiye ve Ambulans", "112"),
+            EmergencyContact("Berlin Charité Hastanesi", "+493045050"),
+            EmergencyContact("T.C. Berlin Büyükelçiliği", "+4930275850")
+        )
+        "FR" -> listOf(
+            EmergencyContact("Avrupa Acil Çağrı Merkezi", "112"),
+            EmergencyContact("Polis (Police Secours)", "17"),
+            EmergencyContact("Ambulans (SAMU)", "15"),
+            EmergencyContact("Paris Hôtel-Dieu Hastanesi", "+33142348234"),
+            EmergencyContact("T.C. Paris Büyükelçiliği", "+33153927111")
+        )
+        "NL" -> listOf(
+            EmergencyContact("Avrupa Acil Çağrı Merkezi", "112"),
+            EmergencyContact("Polis (Politie)", "09008844"),
+            EmergencyContact("Amsterdam UMC Hastanesi", "+31205669111"),
+            EmergencyContact("T.C. Lahey Büyükelçiliği", "+31703023100")
+        )
+        "CZ" -> listOf(
+            EmergencyContact("Avrupa Acil Çağrı Merkezi", "112"),
+            EmergencyContact("Polis (Policie)", "158"),
+            EmergencyContact("Ambulans (Záchranná služba)", "155"),
+            EmergencyContact("Prag Motol Üniversite Hastanesi", "+420224431111"),
+            EmergencyContact("T.C. Prag Büyükelçiliği", "+420224311401")
+        )
+        else -> getDefaultContacts() // Tanımlı olmayan bir Avrupa ülkesinde ise varsayılan listeyi verir
+    }
+}
+
+fun getDefaultContacts(): List<EmergencyContact> {
+    return listOf(
+        EmergencyContact("Avrupa Acil Çağrı Merkezi", "112"),
+        EmergencyContact("Polis (Policja)", "997"),
+        EmergencyContact("Ambulans (Pogotowie)", "999"),
+        EmergencyContact("Zielona Góra Üniversite Hastanesi", "+48683296200"),
+        EmergencyContact("T.C. Varşova Büyükelçiliği", "+48228546110")
+    )
+}
